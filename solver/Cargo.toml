@@ -1,0 +1,19 @@
+[package]
+name = "solver"
+version = "0.1.0"
+authors = ["Peter Eliasson <warackta@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release] 
+debug = true
+
+[dependencies]
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "solve_benchmark"
+harness = false
