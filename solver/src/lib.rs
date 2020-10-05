@@ -84,15 +84,16 @@ impl Sudoku {
 
         for &block in block_positions.iter() {
             let block: Vec<_> = block.iter().map(|&idx| &self.cells[idx]).collect();
-            let mut values = HashSet::new();
-            for v in block.iter() {
+            let mut values = [false; 9];
+            for &v in block.iter() {
                 if v.is_none() {
                     continue;
                 }
-                if values.contains(&v) {
+                let idx = (v.unwrap() as usize) - 1;
+                if values[idx] {
                     return false;
                 }
-                values.insert(v);
+                values[idx] = true;
             }
         }
         true
