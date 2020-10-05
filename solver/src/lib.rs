@@ -82,9 +82,9 @@ impl Sudoku {
         ];
 
         for &block in block_positions.iter() {
-            let block: Vec<_> = block.iter().map(|&idx| &self.cells[idx]).collect();
+            let block = block.iter().map(|&idx| &self.cells[idx]);
             let mut values = [false; 9];
-            for &v in block.iter() {
+            for &v in block {
                 if v.is_none() {
                     continue;
                 }
