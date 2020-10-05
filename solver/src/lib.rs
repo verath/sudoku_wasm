@@ -274,6 +274,16 @@ pub const EXTREME_SOLUTION: &str = "\
 246571983\
 853496217\
 971832546";
+pub const UNSOLVABLE: &str = "\
+________1\
+_8__5_76_\
+6____4_3_\
+_____7__2\
+___3_____\
+7___8_6__\
+__6_7_98_\
+85_4___1_\
+97______5";
 
 #[cfg(test)]
 mod tests {
@@ -356,5 +366,10 @@ mod tests {
     #[test]
     fn test_solve_extreme() {
         assert_eq!(solve(EXTREME).unwrap(), EXTREME_SOLUTION);
+    }
+
+    #[test]
+    fn test_solve_unsolvable() {
+        assert_eq!(solve(UNSOLVABLE), Err("no solution"));
     }
 }
