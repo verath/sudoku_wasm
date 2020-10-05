@@ -21,14 +21,13 @@ impl Sudoku {
     }
 
     pub fn solve(&self) -> Option<Sudoku> {
-        let s = self.clone();
-        s.do_solve()
-    }
-
-    fn do_solve(&self) -> Option<Sudoku> {
         if !self.is_valid() {
             return None;
         }
+        self.do_solve()
+    }
+
+    fn do_solve(&self) -> Option<Sudoku> {
         if self.is_solved() {
             return Some(self.clone());
         }
