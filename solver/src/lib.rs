@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::fmt;
 use std::str::FromStr;
 
@@ -100,21 +99,22 @@ impl Sudoku {
     }
 
     fn possible_values(&self, position: usize) -> Vec<u8> {
-        let mut occupied = HashSet::new();
+        let mut used_values = [false; 9];
 
         // Exclude values already in same row.
         let row_idx = position / 9;
-        let row_values = self.cells[(row_idx * 9)..(row_idx * 9 + 9)]
+        self.cells[(row_idx * 9)..(row_idx * 9 + 9)]
             .iter()
-            .filter_map(|&v| v);
-        occupied.extend(row_values);
+            .filter_map(|&v| v)
+            .for_each(|v| used_values[(v - 1) as usize] = true);
+
         // Exclude values already in same col.
         let col_idx = position % 9;
         for i in 0..9 {
             let p = col_idx + 9 * i;
             // Note value at given "position" assumed to be None.
             if let Some(v) = self.cells[p] {
-                occupied.insert(v);
+                used_values[(v - 1) as usize] = true;
             }
         }
         // Exclude values already in same square.
@@ -124,12 +124,17 @@ impl Sudoku {
             for c in 0..3 {
                 let p = square_pos + r * 9 + c;
                 if let Some(v) = self.cells[p] {
-                    occupied.insert(v);
+                    used_values[(v - 1) as usize] = true;
                 }
             }
         }
-        let all: HashSet<u8> = vec![1u8, 2, 3, 4, 5, 6, 7, 8, 9].into_iter().collect();
-        all.difference(&occupied).cloned().collect()
+
+        used_values
+            .iter()
+            .enumerate()
+            .filter(|&(_, is_used)| !is_used)
+            .map(|(idx, _)| (idx + 1) as u8)
+            .collect()
     }
 
     fn find_empty_cell(&self) -> (usize, Vec<u8>) {
