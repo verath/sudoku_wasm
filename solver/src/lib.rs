@@ -24,21 +24,21 @@ impl Sudoku {
         if !self.is_valid() {
             return None;
         }
-        self.do_solve()
+        self.clone().do_solve()
     }
 
-    fn do_solve(&self) -> Option<Sudoku> {
+    fn do_solve(&mut self) -> Option<Sudoku> {
         if self.is_solved() {
             return Some(self.clone());
         }
         let (position, possible_values) = self.find_empty_cell();
         for v in possible_values {
-            let mut next = self.clone();
-            next.cells[position] = Some(v);
-            if let Some(solved) = next.do_solve() {
+            self.cells[position] = Some(v);
+            if let Some(solved) = self.do_solve() {
                 return Some(solved);
             }
         }
+        self.cells[position] = None;
         None
     }
 
