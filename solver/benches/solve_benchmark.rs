@@ -10,6 +10,9 @@ pub fn criterion_benchmark(c: &mut Criterion) {
     group.bench_function("HARD", |b| {
         b.iter(|| solver::solve(black_box(solver::HARD)))
     });
+    group.bench_function("EXTREME", |b| {
+        b.iter(|| solver::solve(black_box(solver::EXTREME)))
+    });
 }
 
 criterion_group!(benches, criterion_benchmark);

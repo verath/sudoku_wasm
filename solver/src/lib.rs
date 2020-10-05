@@ -252,6 +252,28 @@ pub const HARD_SOLUTION: &str = "\
 186235749\
 435791862\
 729846135";
+// https://www.sudokuwiki.org/Weekly_Sudoku.asp
+// #420, October 3 - October 9: The Weekly Extreme 'Unsolveable' Sudoku Puzzle
+pub const EXTREME: &str = "\
+________1\
+_8__5_76_\
+6____4_3_\
+_____7__2\
+___3_____\
+7___8_6__\
+__6_7_98_\
+85_4___1_\
+97_______";
+pub const EXTREME_SOLUTION: &str = "\
+395768421\
+184253769\
+627914835\
+518647392\
+469325178\
+732189654\
+246571983\
+853496217\
+971832546";
 
 #[cfg(test)]
 mod tests {
@@ -329,5 +351,10 @@ mod tests {
     #[test]
     fn test_solve_hard() {
         assert_eq!(solve(HARD).unwrap(), HARD_SOLUTION);
+    }
+
+    #[test]
+    fn test_solve_extreme() {
+        assert_eq!(solve(EXTREME).unwrap(), EXTREME_SOLUTION);
     }
 }
