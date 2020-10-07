@@ -1,3 +1,4 @@
+use arrayvec::ArrayVec;
 use std::fmt;
 use std::str::FromStr;
 
@@ -97,7 +98,7 @@ impl Sudoku {
         true
     }
 
-    fn possible_values(&self, position: usize) -> Vec<u8> {
+    fn possible_values(&self, position: usize) -> ArrayVec<[u8; 9]> {
         let mut used_values = [false; 9];
 
         // Exclude values already in same row.
@@ -136,7 +137,7 @@ impl Sudoku {
             .collect()
     }
 
-    fn find_empty_cell(&self) -> (usize, Vec<u8>) {
+    fn find_empty_cell(&self) -> (usize, ArrayVec<[u8; 9]>) {
         let empty_cells_itr = self
             .cells
             .iter()

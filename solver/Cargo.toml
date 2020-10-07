@@ -10,6 +10,7 @@ edition = "2018"
 debug = true
 
 [dependencies]
+arrayvec = "0.5.1"
 
 [dev-dependencies]
 criterion = "0.3"
