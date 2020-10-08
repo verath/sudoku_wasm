@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>sudoku_wasm</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <script type="module">
+        import init, { solve } from './pkg/solver_wasm.js'
+
+        async function main() {
+            await init();
+            debugger;
+        };
+        main();
+    </script>
+</body>
+
+</html>

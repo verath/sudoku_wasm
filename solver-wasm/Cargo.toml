@@ -1,0 +1,21 @@
+[package]
+name = "solver-wasm"
+version = "0.1.0"
+authors = ["Peter Eliasson <peter.eliasson@smarteye.se>"]
+edition = "2018"
+
+# https://github.com/rustwasm/wasm-pack/issues/886#issuecomment-667669802
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-mutable-globals"]
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+solver = { path = "../solver" }
+serde = { version = "1.0", features = ["derive"] }
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
+

@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "solver",
+    "solver-wasm",
+]
+
+[profile.release] 
+debug = true # Produce .pdbs in release for profiling support.
