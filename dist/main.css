@@ -1,0 +1,115 @@
+body, input {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 400;
+    font-size: 16px;
+}
+
+#sudoku {
+    font: inherit;
+    display: block;
+    float: none;
+    margin: 0 auto;
+    max-width: 320px;
+    min-width: 120px;
+    width: 100%;
+    height: 320px;
+    position: relative;
+}
+
+#sudokuCtrls, #errorText {
+    float: none;
+    margin: 10px auto;
+    max-width: 320px;
+    min-width: 120px;
+    width: 100%;
+}
+#sudokuCtrls {
+    display: block;
+    text-align: right;
+}
+#errorText {
+    color: red;
+    text-align: center;
+}
+
+input[type="button"] {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+#btnClear {
+    margin-right: 10px
+}
+#btnSolve {
+    background-color: rgb(77, 254, 144);
+    background-image: -moz-linear-gradient(center top , rgb(77, 254, 144), rgb(71, 237, 135));
+    border: 1px solid rgb(48, 237, 121);
+    border-radius: 4px;
+    padding: 5px;
+    color: rgb(0, 100, 0);
+}
+#btnSolve:hover {
+    color: rgb(0, 40, 0);
+    border: 1px solid rgb(38, 200, 100);
+}
+#btnSolve:disabled{
+    background-color: rgb(190, 254, 190);
+    background-image: none;
+    border: 1px solid rgb(148, 237, 221);
+    border-radius: 4px;
+    padding: 5px;
+    color: rgb(100, 100, 100);
+}
+
+input.cell {
+    font-weight: 700;
+    box-sizing: border-box;
+    float: left;
+    width: calc(100% / 9);
+    height: calc(100% / 9);
+    padding: 5px;
+    text-align: center;
+    display: block;
+    border: none;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}
+input.cell.solved{
+    color: blue;
+    font-weight: 400;
+}
+
+/** # 3x3 borders */
+input.cell:nth-of-type(3n) {
+    border-right: 1px solid black;
+}       
+input.cell:nth-of-type(n+19):nth-of-type(-n+27) {
+   border-bottom: 1px solid black;
+}
+input.cell:nth-of-type(n+46):nth-of-type(-n+54) {
+   border-bottom: 1px solid black;
+}
+
+/** # Outer border */
+/** First row should have a thicker border top */
+input.cell:nth-of-type(-n+9) {
+    border-top: 2px solid black;
+}
+/** Every first cell of a row should have a thick border left */
+input.cell:nth-of-type(9n+1) {
+    border-left: 2px solid black;
+}
+/** Every last cell of a row should have a border to the right */
+input.cell:nth-of-type(9n) {
+    border-right: 2px solid black;
+}
+/** Every 10th cell should start a new row */
+input.cell:nth-of-type(9n+1) {
+    clear: both;
+}
+/** Last 9 cells should have border bottom */
+input.cell:nth-last-of-type(-n+9) {
+    border-bottom: 2px solid black;
+}
