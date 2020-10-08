@@ -2,19 +2,178 @@
 <html>
 
 <head>
-    <title>sudoku_wasm</title>
-    <meta charset="utf-8" />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="spinner.css">
+
+    <title>Sudoku Solver (@GIT_VERSION@)</title>
 </head>
 
 <body>
+    <div id="sudoku"></div>
+    <div class="spinner" id="loadingAnim" hidden>
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+    <div id="sudokuCtrls">
+        <input type="button" value="Clear" id="btnClear">
+        <input type="button" value="Solve!" id="btnSolve">
+    </div>
+    <p id="errorText" hidden></p>
+
     <script type="module">
-        import init, { solve } from './pkg/solver_wasm.js'
+        import wasmInit, { solve as wasmSolve } from './solver_wasm.js'
+
+        function disableAll() {
+            let inputs = document.getElementsByTagName('input');
+            for (let element of inputs) {
+                element.disabled = true;
+            }
+        }
+
+        function enableAll() {
+            let inputs = document.getElementsByTagName('input');
+            for (let element of inputs) {
+                element.disabled = false;
+            }
+        }
+
+        function solve() {
+            disableAll();
+            document.getElementById('loadingAnim').hidden = false;
+            document.getElementById('errorText').hidden = true;
+
+            let cells = document.getElementsByClassName('cell');
+            cells = Array.prototype.slice.call(cells);
+            let sudokuInput = "";
+            cells.forEach(function (cell) {
+                let val = parseInt(cell.value, 10);
+                if (!isNaN(val) && val >= 1 && val <= 9) {
+                    sudokuInput += ("" + val);
+                } else {
+                    sudokuInput += "_";
+                }
+            });
+
+            console.time("wasmSolve");
+            let result = wasmSolve(sudokuInput);
+            console.timeEnd("wasmSolve");
+
+            document.getElementById('loadingAnim').hidden = true;
+
+            if (result.error) {
+                document.getElementById('loadingAnim').hidden = true;
+                document.getElementById('errorText').hidden = false;
+                document.getElementById('errorText').innerText = 'Error: ' + result.error;
+            } else {
+                let solution = result.solution;
+                cells.forEach(function (cell, i) {
+                    let val = solution[i];
+                    if (cell.value != val) {
+                        cell.classList.add('solved');
+                        cell.value = val;
+                    }
+                });
+                updateHash();
+            }
+            enableAll();
+        }
+
+
+        function clear() {
+            if (!confirm('Are you sure you want to clear all cells?')) return;
+
+            let cells = document.getElementsByClassName('cell');
+            cells = Array.prototype.slice.call(cells);
+
+            cells.forEach(function (cell) {
+                cell.value = '';
+                cell.classList.remove("solved");
+            });
+            document.getElementById('errorText').hidden = true;
+            updateHash();
+        }
+
+        function onCellChange(e) {
+            let ele = e.target;
+            let val = ele.value;
+            if (val.length > 1) {
+                val = val.substr(1, 1);
+            }
+
+            val = parseInt(val, 10);
+            if (!isNaN(val) && val >= 1 && val <= 9) {
+                ele.value = val;
+            } else {
+                ele.value = '';
+            }
+            updateHash();
+        }
+
+        function updateHash() {
+            let hash = [];
+            let cells = document.getElementsByClassName('cell');
+            for (let cell of cells) {
+                hash.push(cell.value.substr(0, 1));
+            }
+            cells = Array.prototype.slice.call(cells);
+            document.location.hash = '!' + hash.join(',');
+        }
+
+        function restoreNumbersFromHash() {
+            let hash = document.location.hash.replace(/^#!/, '');
+            if (!hash) {
+                return;
+            }
+
+            // Hash is comma-separated values of cells
+            let values = hash.split(',');
+            let cells = document.getElementsByClassName('cell');
+            for (let i in cells) {
+                if (i >= values.length) {
+                    return;
+                }
+                let value = parseInt(values[i], 10);
+                if (!isNaN(value) && value >= 1 && value <= 10) {
+                    document.getElementsByClassName('cell')[i].value = value;
+                }
+            }
+        }
+
+        async function init() {
+            // Load WASM solver.
+            await wasmInit();
+
+            // Place cells.
+            for (let num = 0; num < 9 * 9; num++) {
+                let cell = document.createElement('input');
+                cell.className = 'cell';
+                cell.type = "text";
+                cell.maxLength = 1;
+                cell.pattern = "^[1-9]?$"
+                cell.value = "";
+                cell.placeholder = "";
+                cell.addEventListener('input', onCellChange);
+                document.getElementById('sudoku').appendChild(cell);
+            }
+
+            // Restore values from the hash, if any.
+            restoreNumbersFromHash();
+
+            // Focus first cell.
+            document.getElementsByClassName('cell')[0].focus();
+            document.getElementById('btnSolve').addEventListener('click', solve);
+            document.getElementById('btnClear').addEventListener('click', clear);
+        }
 
         async function main() {
             await init();
-            debugger;
         };
-        main();
+        main().catch(err => console.error(err));
     </script>
 </body>
 
