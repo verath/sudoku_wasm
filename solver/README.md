@@ -1,6 +1,6 @@
 # Solver
 
-Solver implements a simple recursive brute-force sudoku solver.
+Solver implements a simple recursive (mostly) brute-force sudoku solver.
 
 
 ## Tests

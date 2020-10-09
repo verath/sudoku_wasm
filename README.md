@@ -1,5 +1,9 @@
 # sodoku_wasm
 
+sodoku_wasm is a sudoku solver written in rust. It is compiled to WebAssembly
+(wasm) and runs in the browser.
+
+
 ## Dependencies
 
 * Rust and Cargo
@@ -8,8 +12,16 @@
   - `cargo install wasm-pack` 
 
 
-## Compiling to WebAssembly
+## Building
 
-```
-wasm-pack build --target web --out-dir ../web/pkg solver-wasm
-```
+See the [build.ps1](./build.ps1) script.
+
+
+## Project Structure
+
+- `./dist`: Latest release build, to be served via gh-pages.
+- `./solver`: A "normal" Rust lib crate implementing a sudoku solver.
+- `./solver-wasm`: A thin wrapper around the solver crate, compiled to wasm.
+- `./web`: Static web assets implementing a simple sudoku UI that calls
+  solver-wasm to solve the sudoku.
+

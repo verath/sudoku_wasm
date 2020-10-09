@@ -39,6 +39,8 @@ impl Sudoku {
                 return Some(solved);
             }
         }
+        // None of the possible values for cell at "position" produced a
+        // solution, must backtrack => must reset cell to empty.
         self.cells[position] = None;
         None
     }
@@ -81,6 +83,8 @@ impl Sudoku {
             [60, 61, 62, 69, 70, 71, 78, 79, 80], // Bottom Right
         ];
 
+        // For each block (row, col, 3x3 square) make sure each number 1-9
+        // occurs at most once.
         for &block in block_positions.iter() {
             let block = block.iter().map(|&idx| &self.cells[idx]);
             let mut values = [false; 9];
@@ -90,6 +94,7 @@ impl Sudoku {
                 }
                 let idx = (v.unwrap() as usize) - 1;
                 if values[idx] {
+                    // Cell value already exist in block => invalid.
                     return false;
                 }
                 values[idx] = true;
